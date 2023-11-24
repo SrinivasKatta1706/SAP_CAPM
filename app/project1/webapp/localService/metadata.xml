@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="Catalogservice" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="employeSet" EntityType="Catalogservice.employeSet"/>
+                <EntitySet Name="pgdetailsSet" EntityType="Catalogservice.pgdetailsSet"/>
+                <EntitySet Name="tenantdetalsSet" EntityType="Catalogservice.tenantdetalsSet"/>
+                <EntitySet Name="AddressSet" EntityType="Catalogservice.AddressSet">
+                    <NavigationPropertyBinding Path="businesspartner" Target="BPSet"/>
+                </EntitySet>
+                <EntitySet Name="ProductSet" EntityType="Catalogservice.ProductSet">
+                    <NavigationPropertyBinding Path="SUPPLIER_GUID" Target="BPSet"/>
+                    <NavigationPropertyBinding Path="texts" Target="ProductSet_texts"/>
+                    <NavigationPropertyBinding Path="localized" Target="ProductSet_texts"/>
+                </EntitySet>
+                <EntitySet Name="BPSet" EntityType="Catalogservice.BPSet">
+                    <NavigationPropertyBinding Path="ADDRESS_GUID" Target="AddressSet"/>
+                </EntitySet>
+                <EntitySet Name="ProductSet_texts" EntityType="Catalogservice.ProductSet_texts"/>
+            </EntityContainer>
+            <EntityType Name="employeSet">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="nameFirst" Type="Edm.String" MaxLength="40"/>
+                <Property Name="nameMiddle" Type="Edm.String" MaxLength="40"/>
+                <Property Name="nameLast" Type="Edm.String" MaxLength="40"/>
+                <Property Name="nameInitials" Type="Edm.String" MaxLength="40"/>
+                <Property Name="sex" Type="Edm.String" MaxLength="1"/>
+                <Property Name="language" Type="Edm.String" MaxLength="1"/>
+                <Property Name="phoneNumber" Type="Edm.String" MaxLength="30"/>
+                <Property Name="email" Type="Edm.String" MaxLength="255"/>
+                <Property Name="loginName" Type="Edm.String" MaxLength="12"/>
+                <Property Name="currency_code" Type="Edm.String" MaxLength="3"/>
+                <Property Name="salaryAmount" Type="Edm.Decimal" Scale="2" Precision="15"/>
+                <Property Name="accountNumber" Type="Edm.String" MaxLength="16"/>
+                <Property Name="bankId" Type="Edm.String" MaxLength="8"/>
+                <Property Name="bankName" Type="Edm.String" MaxLength="16"/>
+            </EntityType>
+            <EntityType Name="pgdetailsSet">
+                <Key>
+                    <PropertyRef Name="PG_ID"/>
+                </Key>
+                <Property Name="PG_ID" Type="Edm.String" MaxLength="10" Nullable="false"/>
+                <Property Name="PG_NAME" Type="Edm.String" MaxLength="10"/>
+            </EntityType>
+            <EntityType Name="tenantdetalsSet">
+                <Key>
+                    <PropertyRef Name="TENANT_NAME"/>
+                </Key>
+                <Property Name="PG_ID" Type="Edm.String" MaxLength="10"/>
+                <Property Name="PG_NAME" Type="Edm.String" MaxLength="10"/>
+                <Property Name="TENANT_ID" Type="Edm.String" MaxLength="4"/>
+                <Property Name="TENANT_NAME" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="ADDRESS" Type="Edm.String" MaxLength="40"/>
+                <Property Name="PHONE_NUMBER" Type="Edm.String" MaxLength="10"/>
+                <Property Name="ROOM_NO" Type="Edm.String" MaxLength="10"/>
+                <Property Name="CHECKIN_DATE" Type="Edm.Date"/>
+                <Property Name="CHECKOUT_DATE" Type="Edm.Date"/>
+            </EntityType>
+            <EntityType Name="AddressSet">
+                <Key>
+                    <PropertyRef Name="NODE_KEY"/>
+                </Key>
+                <Property Name="NODE_KEY" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="CITY" Type="Edm.String" MaxLength="44"/>
+                <Property Name="POSTAL_CODE" Type="Edm.String" MaxLength="8"/>
+                <Property Name="STREET" Type="Edm.String" MaxLength="44"/>
+                <Property Name="BUILDING" Type="Edm.String" MaxLength="128"/>
+                <Property Name="COUNTRY" Type="Edm.String" MaxLength="44"/>
+                <Property Name="ADDRESS_TYPE" Type="Edm.String" MaxLength="44"/>
+                <Property Name="VAL_START_DATE" Type="Edm.Date"/>
+                <Property Name="VAL_END_DATE" Type="Edm.Date"/>
+                <Property Name="LATITUDE" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="LONGITUDE" Type="Edm.Decimal" Scale="variable"/>
+                <NavigationProperty Name="businesspartner" Type="Catalogservice.BPSet" Partner="ADDRESS_GUID">
+                    <ReferentialConstraint Property="NODE_KEY" ReferencedProperty="ADDRESS_GUID_NODE_KEY"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="ProductSet">
+                <Key>
+                    <PropertyRef Name="NODE_KEY"/>
+                </Key>
+                <Property Name="NODE_KEY" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="PRODUCT_ID" Type="Edm.String" MaxLength="28"/>
+                <Property Name="TYPE_CODE" Type="Edm.String" MaxLength="2"/>
+                <Property Name="CATEGORY" Type="Edm.String" MaxLength="32"/>
+                <Property Name="DESCRIPTION" Type="Edm.String" MaxLength="255"/>
+                <NavigationProperty Name="SUPPLIER_GUID" Type="Catalogservice.BPSet">
+                    <ReferentialConstraint Property="SUPPLIER_GUID_NODE_KEY" ReferencedProperty="NODE_KEY"/>
+                </NavigationProperty>
+                <Property Name="SUPPLIER_GUID_NODE_KEY" Type="Edm.String" MaxLength="20"/>
+                <Property Name="TAX_TARIF_CODE" Type="Edm.Int32"/>
+                <Property Name="MEASURE_UNIT" Type="Edm.String" MaxLength="2"/>
+                <Property Name="WEIGHT_MEASURE" Type="Edm.Decimal" Scale="2" Precision="5"/>
+                <Property Name="WEIGHT_UNIT" Type="Edm.String" MaxLength="2"/>
+                <Property Name="CURRENCY_CODE" Type="Edm.String" MaxLength="4"/>
+                <Property Name="PRICE" Type="Edm.Decimal" Scale="2" Precision="15"/>
+                <Property Name="WIDTH" Type="Edm.Decimal" Scale="2" Precision="5"/>
+                <Property Name="DEPTH" Type="Edm.Decimal" Scale="2" Precision="5"/>
+                <Property Name="HEIGHT" Type="Edm.Decimal" Scale="2" Precision="5"/>
+                <Property Name="DIM_UNIT" Type="Edm.String" MaxLength="2"/>
+                <NavigationProperty Name="texts" Type="Collection(Catalogservice.ProductSet_texts)">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="Catalogservice.ProductSet_texts">
+                    <ReferentialConstraint Property="NODE_KEY" ReferencedProperty="NODE_KEY"/>
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="BPSet">
+                <Key>
+                    <PropertyRef Name="NODE_KEY"/>
+                </Key>
+                <Property Name="NODE_KEY" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="BP_ROLE" Type="Edm.String" MaxLength="2"/>
+                <Property Name="EMAIL_ADDRESS" Type="Edm.String" MaxLength="105"/>
+                <Property Name="PHONE_NUMBER" Type="Edm.String" MaxLength="32"/>
+                <Property Name="FAX_NUMBER" Type="Edm.String" MaxLength="32"/>
+                <Property Name="WEB_ADDRESS" Type="Edm.String" MaxLength="44"/>
+                <NavigationProperty Name="ADDRESS_GUID" Type="Catalogservice.AddressSet" Partner="businesspartner">
+                    <ReferentialConstraint Property="ADDRESS_GUID_NODE_KEY" ReferencedProperty="NODE_KEY"/>
+                </NavigationProperty>
+                <Property Name="ADDRESS_GUID_NODE_KEY" Type="Edm.String" MaxLength="20"/>
+                <Property Name="BP_ID" Type="Edm.String" MaxLength="32"/>
+                <Property Name="COMPANY_NAME" Type="Edm.String" MaxLength="250"/>
+            </EntityType>
+            <EntityType Name="ProductSet_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="NODE_KEY"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="NODE_KEY" Type="Edm.String" MaxLength="20" Nullable="false"/>
+                <Property Name="DESCRIPTION" Type="Edm.String" MaxLength="255"/>
+            </EntityType>
+            <Annotations Target="Catalogservice.employeSet/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="Catalogservice.employeSet/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="Catalogservice.employeSet/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="Catalogservice.employeSet/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="Catalogservice.employeSet/sex">
+                                        <Annotation Term="Validation.AllowedValues">
+                                            <Collection>
+                                                <Record Type="Validation.AllowedValue">
+                                                    <Annotation Term="Core.SymbolicName" String="male"/>
+                                                    <PropertyValue Property="Value" String="M"/>
+                                                </Record>
+                                                <Record Type="Validation.AllowedValue">
+                                                    <Annotation Term="Core.SymbolicName" String="female"/>
+                                                    <PropertyValue Property="Value" String="F"/>
+                                                </Record>
+                                                <Record Type="Validation.AllowedValue">
+                                                    <Annotation Term="Core.SymbolicName" String="nonBinary"/>
+                                                    <PropertyValue Property="Value" String="N"/>
+                                                </Record>
+                                                <Record Type="Validation.AllowedValue">
+                                                    <Annotation Term="Core.SymbolicName" String="noDisclosure"/>
+                                                    <PropertyValue Property="Value" String="D"/>
+                                                </Record>
+                                                <Record Type="Validation.AllowedValue">
+                                                    <Annotation Term="Core.SymbolicName" String="selfDescribe"/>
+                                                    <PropertyValue Property="Value" String="S"/>
+                                                </Record>
+                                            </Collection>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="Catalogservice.employeSet/phoneNumber">
+                                        <Annotation Term="Validation.Pattern" String="((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))"/>
+                                    </Annotations>
+                                    <Annotations Target="Catalogservice.employeSet/email">
+                                        <Annotation Term="Validation.Pattern" String="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"/>
+                                    </Annotations>
+                                    <Annotations Target="Catalogservice.ProductSet_texts/locale">
+                                        <Annotation Term="Common.Label" String="{i18n>LanguageCode}"/>
+                                        </Annotations>
+                                    </Schema>
+                                </edmx:DataServices>
+                            </edmx:Edmx>
